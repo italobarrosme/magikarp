@@ -21,11 +21,11 @@ services:
   nextjs-phishing:
     build: .
     ports:
-      - "3000:3000"
+      - "3002:3002"
     environment:
       DATABASE_URL: postgresql://user:postgres-phishing-3102@postgres-phishing:5435/phishing
       WAHA_URL: http://localhost:3001
-      APP_URL: http://localhost:3000
+      APP_URL: http://localhost:3002
       JWT_SECRET: super_secret_here
       NEXT_PUBLIC_WAHA_LICENSE: 64155485-9658-4889-a545-b10d15421d2d
     depends_on:

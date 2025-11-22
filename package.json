@@ -19,7 +19,10 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "update:browserslist": "npx update-browserslist-db@latest"
+    "update:browserslist": "npx update-browserslist-db@latest",
+    "prisma:generate": "npx prisma generate",
+    "prisma:studio": "npx prisma studio",
+    "init:cli:better-auth": "npx @better-auth/cli@latest generate --config ./src/modules/authentication/auth.ts"
   },
   "prisma": {
     "seed": "node --loader ts-node/esm prisma/lib/seed.ts"
@@ -28,6 +31,7 @@
     "@auth0/nextjs-auth0": "^4.6.1",
     "@faker-js/faker": "^9.8.0",
     "@hookform/resolvers": "^5.1.1",
+    "@prisma/adapter-pg": "^7.0.0",
     "@prisma/client": "^7.0.0",
     "@prisma/config": "^7.0.0",
     "@tailwindcss/postcss": "^4.1.10",
@@ -46,6 +50,7 @@
     "next": "15.5.2",
     "next-pwa": "^5.6.0",
     "npm": "^11.4.1",
+    "pg": "^8.16.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.57.0",
@@ -63,7 +68,9 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.1",
+    "@types/pg": "^8.15.6",
     "@vitejs/plugin-react": "^4.5.2",
     "@vitest/coverage-istanbul": "^3.2.3",
     "dotenv": "^17.2.3",
