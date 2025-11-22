@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { useMemo } from "react";
-import type { LoginFormData, RegisterFormData, AuthError } from "../types";
+import { useMemo } from 'react'
+import type { AuthError, LoginFormData, RegisterFormData } from '../types'
 
 /**
  * Hook responsável por aplicar regras de negócio e validação
@@ -27,71 +27,71 @@ import type { LoginFormData, RegisterFormData, AuthError } from "../types";
  */
 export function useAuthLogic() {
   const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
 
   const validatePassword = (password: string): boolean => {
     // Mínimo 8 caracteres
-    return password.length >= 8;
-  };
+    return password.length >= 8
+  }
 
   const validateLogin = (data: LoginFormData): AuthError | null => {
     if (!data.email.trim()) {
-      return { message: "Email é obrigatório", field: "email" };
+      return { message: 'Email é obrigatório', field: 'email' }
     }
 
     if (!validateEmail(data.email)) {
-      return { message: "Email inválido", field: "email" };
+      return { message: 'Email inválido', field: 'email' }
     }
 
     if (!data.password.trim()) {
-      return { message: "Senha é obrigatória", field: "password" };
+      return { message: 'Senha é obrigatória', field: 'password' }
     }
 
-    return null;
-  };
+    return null
+  }
 
   const validateRegister = (data: RegisterFormData): AuthError | null => {
     if (!data.name.trim()) {
-      return { message: "Nome é obrigatório", field: "name" };
+      return { message: 'Nome é obrigatório', field: 'name' }
     }
 
     if (data.name.trim().length < 2) {
       return {
-        message: "Nome deve ter pelo menos 2 caracteres",
-        field: "name",
-      };
+        message: 'Nome deve ter pelo menos 2 caracteres',
+        field: 'name',
+      }
     }
 
     if (!data.email.trim()) {
-      return { message: "Email é obrigatório", field: "email" };
+      return { message: 'Email é obrigatório', field: 'email' }
     }
 
     if (!validateEmail(data.email)) {
-      return { message: "Email inválido", field: "email" };
+      return { message: 'Email inválido', field: 'email' }
     }
 
     if (!data.password.trim()) {
-      return { message: "Senha é obrigatória", field: "password" };
+      return { message: 'Senha é obrigatória', field: 'password' }
     }
 
     if (!validatePassword(data.password)) {
       return {
-        message: "Senha deve ter pelo menos 8 caracteres",
-        field: "password",
-      };
+        message: 'Senha deve ter pelo menos 8 caracteres',
+        field: 'password',
+      }
     }
 
     if (data.password !== data.confirmPassword) {
       return {
-        message: "As senhas não coincidem",
-        field: "confirmPassword",
-      };
+        message: 'As senhas não coincidem',
+        field: 'confirmPassword',
+      }
     }
 
-    return null;
-  };
+    return null
+  }
 
   return useMemo(
     () => ({
@@ -99,5 +99,5 @@ export function useAuthLogic() {
       validateRegister,
     }),
     []
-  );
+  )
 }

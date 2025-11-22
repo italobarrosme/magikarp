@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { authClient } from "@/modules/authentication/auth-client";
+import { authClient } from '@/modules/authentication/auth-client'
 import {
-  registerSchema,
   type RegisterFormInput,
-} from "@/modules/authentication/schemas";
+  registerSchema,
+} from '@/modules/authentication/schemas'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 type RegisterFormProps = {
-  onSuccess?: () => void;
-  onError?: (error: string) => void;
-};
+  onSuccess?: () => void
+  onError?: (error: string) => void
+}
 
 export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [serverError, setServerError] = useState<string | null>(null)
 
   const {
     register,
@@ -27,47 +27,46 @@ export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
   } = useForm<RegisterFormInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
-  });
+  })
 
   const onSubmit = async (data: RegisterFormInput) => {
-    setServerError(null);
-    setIsLoading(true);
+    setServerError(null)
+    setIsLoading(true)
 
     try {
       const result = await authClient.signUp.email({
         email: data.email,
         password: data.password,
         name: data.name,
-      });
+      })
 
-      console.log(result, "here");
+      console.log(result, 'here')
 
       if (result.error) {
-        const errorMessage =
-          result.error.message || "Erro ao registrar usuário";
-        setServerError(errorMessage);
-        onError?.(errorMessage);
-        return;
+        const errorMessage = result.error.message || 'Erro ao registrar usuário'
+        setServerError(errorMessage)
+        onError?.(errorMessage)
+        return
       }
 
-      onSuccess?.();
+      onSuccess?.()
       // router.push("/");
     } catch (err) {
       const errorMessage =
         err instanceof Error
           ? err.message
-          : "Erro desconhecido ao registrar usuário";
-      setServerError(errorMessage);
-      onError?.(errorMessage);
+          : 'Erro desconhecido ao registrar usuário'
+      setServerError(errorMessage)
+      onError?.(errorMessage)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <form
@@ -84,7 +83,7 @@ export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
         <input
           id="name"
           type="text"
-          {...register("name")}
+          {...register('name')}
           className="w-full px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Seu nome completo"
           disabled={isLoading}
@@ -106,7 +105,7 @@ export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
         <input
           id="email"
           type="email"
-          {...register("email")}
+          {...register('email')}
           className="w-full px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="seu@email.com"
           disabled={isLoading}
@@ -128,7 +127,7 @@ export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
         <input
           id="password"
           type="password"
-          {...register("password")}
+          {...register('password')}
           className="w-full px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Mínimo 8 caracteres"
           disabled={isLoading}
@@ -150,7 +149,7 @@ export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
         <input
           id="confirmPassword"
           type="password"
-          {...register("confirmPassword")}
+          {...register('confirmPassword')}
           className="w-full px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Digite a senha novamente"
           disabled={isLoading}
@@ -175,8 +174,8 @@ export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
         disabled={isLoading}
         className="w-full py-2 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isLoading ? "Registrando..." : "Registrar"}
+        {isLoading ? 'Registrando...' : 'Registrar'}
       </button>
     </form>
-  );
+  )
 }

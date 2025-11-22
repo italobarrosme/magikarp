@@ -1,5 +1,5 @@
-import { LoginForm } from "@/modules/authentication/components/form";
-import Link from "next/link";
+import { LoginForm } from '@/modules/authentication/components/form'
+import Link from 'next/link'
 
 export default function LoginPage() {
   return (
@@ -10,7 +10,7 @@ export default function LoginPage() {
       <LoginForm />
       <div className="flex flex-col gap-2">
         <span className="text-sm text-left md:text-center">
-          Não tem uma conta?{" "}
+          Não tem uma conta?{' '}
           <Link
             href="/register"
             className="text-sm text-primary-regular underline text-left md:text-center"
@@ -20,5 +20,5 @@ export default function LoginPage() {
         </span>
       </div>
     </section>
-  );
+  )
 }

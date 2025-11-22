@@ -1,4 +1,4 @@
-import { UserInfo } from "@/modules/authentication/components/UserInfo";
+import { UserInfo } from '@/modules/authentication/components/UserInfo'
 
 export default async function Home() {
   return (
@@ -13,5 +13,5 @@ export default async function Home() {
         </p>
       </div>
     </section>
-  );
+  )
 }

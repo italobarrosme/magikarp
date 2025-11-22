@@ -1,44 +1,42 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { authClient } from "@/modules/authentication/auth-client";
+import { authClient } from '@/modules/authentication/auth-client'
+import { useEffect, useState } from 'react'
 // import Link from "next/link";
 
 export function UserInfo() {
-  const [user, setUser] = useState<{ name: string; email: string } | null>(
-    null
-  );
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchSession = async () => {
       try {
-        const session = await authClient.getSession();
+        const session = await authClient.getSession()
         if (session?.data?.user) {
           setUser({
-            name: session.data.user.name || "",
-            email: session.data.user.email || "",
-          });
+            name: session.data.user.name || '',
+            email: session.data.user.email || '',
+          })
         }
       } catch (error) {
-        console.error("Erro ao buscar sessão:", error);
+        console.error('Erro ao buscar sessão:', error)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchSession();
-  }, []);
+    fetchSession()
+  }, [])
 
   const handleLogout = async () => {
     try {
-      await authClient.signOut();
-      setUser(null);
-      window.location.href = "/";
+      await authClient.signOut()
+      setUser(null)
+      window.location.href = '/'
     } catch (error) {
-      console.error("Erro ao fazer logout:", error);
+      console.error('Erro ao fazer logout:', error)
     }
-  };
+  }
 
   if (isLoading || !user) {
     return (
@@ -46,7 +44,7 @@ export function UserInfo() {
         <div className="h-8 w-8 rounded-full bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
         <div className="h-4 w-24 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
       </div>
-    );
+    )
   }
 
   // if (!user) {
@@ -86,5 +84,5 @@ export function UserInfo() {
         Sair
       </button>
     </div>
-  );
+  )
 }

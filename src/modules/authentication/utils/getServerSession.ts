@@ -1,5 +1,5 @@
-import { headers } from "next/headers";
-import { auth } from "../auth";
+import { headers } from 'next/headers'
+import { auth } from '../auth'
 
 /**
  * Obtém a sessão atual do usuário no servidor
@@ -19,10 +19,10 @@ import { auth } from "../auth";
  * ```
  */
 export async function getServerSession() {
-  const requestHeaders = await headers();
+  const requestHeaders = await headers()
   const session = await auth.api.getSession({
     headers: new Headers(requestHeaders),
-  });
+  })
 
-  return session;
+  return session
 }
