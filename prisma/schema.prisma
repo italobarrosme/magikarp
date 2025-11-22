@@ -1,26 +1,53 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
-model Lead {
-  id         Int      @id @default(autoincrement())
-  number     String
-  name       String
-  profession String
-  age        Int
-  gender     String
-  birthDate  DateTime
+model User {
+  id       String          @id @default(uuid())
+  name     String
+  phone    String          @unique
+  role     String          @default("employee")
+  messages SentMessage[]
+  events   PhishingEvent[]
+}
+
+model Campaign {
+  id             String            @id @default(uuid())
+  title          String
+  createdAt      DateTime          @default(now())
+  messages       PhishingMessage[]
+  sentMessages   SentMessage[]
+  phishingEvents PhishingEvent[]
+}
+
+model PhishingMessage {
+  id         String   @id @default(uuid())
+  content    String
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+}
+
+model SentMessage {
+  id         String   @id @default(uuid())
+  campaignId String
+  userId     String
+  whatsappId String?
+  sentAt     DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+}
+
+model PhishingEvent {
+  id         String   @id @default(uuid())
+  type       String // click | report
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  userId     String
+  campaignId String
+  metadata   Json?
+  user       User     @relation(fields: [userId], references: [id])
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
 }

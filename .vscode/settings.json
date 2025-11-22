@@ -12,5 +12,8 @@
     ".Styles",
     ".*Classes.*"
   ],
-  "tailwindCSS.experimental.classRegex": ["clsx\\([\"']([\\s\\S]*?)[\"']\\)"]
+  "tailwindCSS.experimental.classRegex": ["clsx\\([\"']([\\s\\S]*?)[\"']\\)"],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma-insider"
+  }
 }
