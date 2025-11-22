@@ -1,0 +1,27 @@
+# EXAMPLE USAGE:
+#
+#   Refer for explanation to following link:
+#   https://evilmartians.github.io/lefthook/configuration/
+#
+pre-push:
+  parallel: true
+  commands:
+    packages-audit:
+      run: npm run build
+    tests:
+      run: npm run test:deploy
+
+commit-msg:
+  commands:
+    commitlint:
+      run: npx commitlint --edit {1}
+
+pre-commit:
+  parallel: true
+  commands:
+    biome-check:
+      glob: "*.{js,ts,jsx,tsx,css,scss,json,jsonc}"
+      run: npx @biomejs/biome check --write {staged_files}
+    tests:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: npm run test:deploy --findRelatedTests --bail
