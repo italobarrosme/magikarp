@@ -1,9 +1,9 @@
-import { Metadata } from "next";
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Configurações",
-  description: "Configurações",
-};
+  title: 'Configurações',
+  description: 'Configurações',
+}
 
 export default async function SettingsPage() {
   return (
@@ -13,5 +13,5 @@ export default async function SettingsPage() {
         Bem-vindo aos configurações do sistema.
       </p>
     </section>
-  );
+  )
 }

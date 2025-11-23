@@ -1,9 +1,9 @@
-import { Metadata } from "next";
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Campanhas",
-  description: "Campanhas",
-};
+  title: 'Campanhas',
+  description: 'Campanhas',
+}
 
 export default async function CampaignsPage() {
   return (
@@ -13,5 +13,5 @@ export default async function CampaignsPage() {
         Bem-vindo aos campanhas do sistema.
       </p>
     </section>
-  );
+  )
 }

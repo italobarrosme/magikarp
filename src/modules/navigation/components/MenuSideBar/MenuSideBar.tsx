@@ -1,16 +1,16 @@
-import Link from "next/link";
+import Link from 'next/link'
 
 type MenuItem = {
-  label: string;
-  icon: React.ReactNode;
-  href: string;
-  subItems?: MenuItem[];
-  onClick?: () => void;
-};
+  label: string
+  icon: React.ReactNode
+  href: string
+  subItems?: MenuItem[]
+  onClick?: () => void
+}
 
 type MenuSideBarProps = {
-  items: MenuItem[];
-};
+  items: MenuItem[]
+}
 
 export const MenuSideBar = ({ items }: MenuSideBarProps) => {
   return (
@@ -28,5 +28,5 @@ export const MenuSideBar = ({ items }: MenuSideBarProps) => {
         </Link>
       ))}
     </aside>
-  );
-};
+  )
+}

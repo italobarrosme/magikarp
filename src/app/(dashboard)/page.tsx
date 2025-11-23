@@ -1,9 +1,9 @@
-import { Metadata } from "next";
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "Dashboard",
-};
+  title: 'Dashboard',
+  description: 'Dashboard',
+}
 
 export default async function HomePage() {
   return (
@@ -15,5 +15,5 @@ export default async function HomePage() {
         </p>
       </div>
     </section>
-  );
+  )
 }

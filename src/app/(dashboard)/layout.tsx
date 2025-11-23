@@ -1,26 +1,26 @@
-import { Metadata } from "next";
-import { ReactNode } from "react";
-import { HomeIcon } from "@/modules/common/components/Icons";
-import { MenuSideBar } from "@/modules/navigation/components/MenuSideBar";
+import { UserInfo } from '@/modules/authentication/components/UserInfo'
 import {
   CampaignsIcon,
   ReportsIcon,
   SettingsIcon,
-} from "@/modules/common/components";
-import { UserInfo } from "@/modules/authentication/components/UserInfo";
+} from '@/modules/common/components'
+import { HomeIcon } from '@/modules/common/components/Icons'
+import { MenuSideBar } from '@/modules/navigation/components/MenuSideBar'
+import { Metadata } from 'next'
+import { ReactNode } from 'react'
 
 type Props = {
-  children?: ReactNode;
-};
+  children?: ReactNode
+}
 
 export const metadata: Metadata = {
-  title: "Nezuko 3",
-  description: "Nezuko 3",
-  manifest: "/manifest.json",
+  title: 'Nezuko 3',
+  description: 'Nezuko 3',
+  manifest: '/manifest.json',
   icons: {
-    apple: "/apple-icon.png",
+    apple: '/apple-icon.png',
   },
-};
+}
 
 export default async function RootLayout({ children }: Props) {
   return (
@@ -32,27 +32,27 @@ export default async function RootLayout({ children }: Props) {
       <MenuSideBar
         items={[
           {
-            label: "Dashboard",
+            label: 'Dashboard',
             icon: <HomeIcon />,
-            href: "/",
+            href: '/',
           },
           {
-            label: "Campanhas",
+            label: 'Campanhas',
             icon: <CampaignsIcon />,
-            href: "/campaigns",
+            href: '/campaigns',
           },
           {
-            label: "Relatórios",
+            label: 'Relatórios',
             icon: <ReportsIcon />,
-            href: "/reports",
+            href: '/reports',
           },
           {
-            label: "Configurações",
+            label: 'Configurações',
             icon: <SettingsIcon />,
-            href: "/settings",
+            href: '/settings',
           },
         ]}
       />
     </section>
-  );
+  )
 }

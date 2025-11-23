@@ -1,9 +1,9 @@
-import { Metadata } from "next";
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Relatórios",
-  description: "Relatórios",
-};
+  title: 'Relatórios',
+  description: 'Relatórios',
+}
 
 export default async function ReportsPage() {
   return (
@@ -13,5 +13,5 @@ export default async function ReportsPage() {
         Bem-vindo aos relatórios do sistema.
       </p>
     </section>
-  );
+  )
 }
