@@ -1,11 +1,13 @@
-import { UserInfo } from '@/modules/authentication/components/UserInfo'
+import { Metadata } from "next";
 
-export default async function Home() {
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Dashboard",
+};
+
+export default async function HomePage() {
   return (
     <section className="w-full h-full flex flex-col gap-4">
-      <div className="flex flex-row gap-4 w-full justify-end">
-        <UserInfo />
-      </div>
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-sm text-gray-500">
@@ -13,5 +15,5 @@ export default async function Home() {
         </p>
       </div>
     </section>
-  )
+  );
 }
