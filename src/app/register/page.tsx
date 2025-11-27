@@ -1,10 +1,10 @@
-import { RegisterForm } from "@/modules/authentication/components/form";
-import Link from "next/link";
-import { redirect } from "next/navigation";
+import { RegisterForm } from '@/modules/authentication/components/form'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 async function redirectToLogin() {
-  "use server";
-  redirect("/login");
+  'use server'
+  redirect('/login')
 }
 
 export default function RegisterPage() {
@@ -16,7 +16,7 @@ export default function RegisterPage() {
       <RegisterForm onSuccess={redirectToLogin} />
       <div className="flex flex-col gap-2">
         <span className="text-sm text-left md:text-center">
-          Já tem uma conta?{" "}
+          Já tem uma conta?{' '}
           <Link
             href="/login"
             className="text-sm text-primary-regular underline text-left md:text-center"
@@ -26,5 +26,5 @@ export default function RegisterPage() {
         </span>
       </div>
     </section>
-  );
+  )
 }
