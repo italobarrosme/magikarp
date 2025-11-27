@@ -17,6 +17,11 @@ services:
       - "3001:3000"
     environment:
       WAHA_LICENSE: 64155485-9658-4889-a545-b10d15421d2d
+      WAHA_API_KEY: ai1zahJGumGN+ey+GrdwK03PbYrPUft7/tobWzdqziI=
+      WAHA_DASHBOARD_USERNAME: admin
+      WAHA_DASHBOARD_PASSWORD: 5bbc6482b73c437ca9aa4ae4d2d7edb0
+      WHATSAPP_SWAGGER_USERNAME: admin
+      WHATSAPP_SWAGGER_PASSWORD: 5bbc6482b73c437ca9aa4ae4d2d7edb0
 
   nextjs-phishing:
     build: .
