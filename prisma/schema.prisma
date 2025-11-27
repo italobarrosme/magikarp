@@ -8,31 +8,39 @@ datasource db {
 }
 
 model User {
-  id            String          @id @default(uuid())
-  name          String
-  phone         String?         @unique
-  role          String          @default("employee")
-  messages      SentMessage[]
-  events        PhishingEvent[]
-  email         String
-  emailVerified Boolean         @default(false)
-  image         String?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  sessions      Session[]
-  accounts      Account[]
+  id               String          @id @default(uuid())
+  name             String
+  phone            String?         @unique
+  role             String          @default("employee")
+  messages         SentMessage[]
+  createdCampaigns Campaign[]      @relation("CampaignCreator")
+  email            String
+  emailVerified    Boolean         @default(false)
+  image            String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  sessions         Session[]
+  accounts         Account[]
 
   @@unique([email])
   @@map("user")
 }
 
 model Campaign {
-  id             String            @id @default(uuid())
-  title          String
-  createdAt      DateTime          @default(now())
-  messages       PhishingMessage[]
-  sentMessages   SentMessage[]
-  phishingEvents PhishingEvent[]
+  id                    String            @id @default(uuid())
+  title                 String
+  fakeLink              String            // Link fictício que parece ser de pagamento
+  createdById           String            // User que criou a campanha
+  createdBy             User              @relation("CampaignCreator", fields: [createdById], references: [id])
+  targetVictimId        String?           // Vítima alvo (opcional, null = múltiplos vítimas)
+  targetVictim          Victim?           @relation(fields: [targetVictimId], references: [id])
+  awarenessPageContent  String?           // Conteúdo da página de conscientização (HTML/Markdown)
+  awarenessPageType     String            @default("html") // html | pdf | markdown
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  messages              PhishingMessage[]
+  sentMessages          SentMessage[]
+  phishingEvents       PhishingEvent[]
 }
 
 model PhishingMessage {
@@ -54,12 +62,15 @@ model SentMessage {
 
 model PhishingEvent {
   id         String   @id @default(uuid())
-  type       String // click | report
+  type       String   // click | report
   createdAt  DateTime @default(now())
-  userId     String
+  victimId   String   // Vítima que clicou
   campaignId String
-  metadata   Json?
-  user       User     @relation(fields: [userId], references: [id])
+  userAgent  String?  // Equipamento/navegador usado
+  ipAddress  String?  // IP do usuário
+  deviceInfo Json?    // Informações adicionais do dispositivo (parseado do userAgent)
+  metadata   Json?    // Metadados adicionais
+  victim     Victim   @relation(fields: [victimId], references: [id])
   campaign   Campaign @relation(fields: [campaignId], references: [id])
 }
 
@@ -97,6 +108,19 @@ model Account {
 
   @@index([userId])
   @@map("account")
+}
+
+model Victim {
+  id            String          @id @default(uuid())
+  name          String
+  email         String?
+  phone         String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  campaigns     Campaign[]
+  events        PhishingEvent[]
+
+  @@map("victim")
 }
 
 model Verification {

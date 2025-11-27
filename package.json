@@ -22,6 +22,10 @@
     "update:browserslist": "npx update-browserslist-db@latest",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
+    "prisma:migrate:dev": "npx prisma migrate dev",
+    "prisma:migrate:deploy": "npx prisma migrate deploy",
+    "prisma:migrate:status": "npx prisma migrate status",
+    "prisma:migrate:reset": "npx prisma migrate reset",
     "init:cli:better-auth": "npx @better-auth/cli@latest generate --config ./src/modules/authentication/auth.ts"
   },
   "prisma": {
