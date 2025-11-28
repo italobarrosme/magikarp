@@ -3,6 +3,10 @@
 
 @custom-variant dark (&:where(html.dark *));
 
+button:hover {
+  cursor: pointer;
+}
+
 @theme {
   /* Expondo as variáveis como tokens nativos do Tailwind 4 */
   --color-primary: var(--color-primary);
