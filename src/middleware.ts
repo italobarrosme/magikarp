@@ -4,8 +4,9 @@ export async function middleware(request: NextRequest) {
   const excludeRoutes = [
     "/login",
     "/register",
-    "/api/auth",
+    "/api/auth/",
     "/recovery-password",
+    "/reset-password",
   ];
 
   // Exclui rotas de API de autenticação e páginas públicas

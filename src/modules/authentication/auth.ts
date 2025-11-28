@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { prisma } from '../../../prisma/lib/prisma'
+import { emailService } from '../email'
 
 export const auth = betterAuth({
   baseURL:
@@ -14,9 +15,24 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
-      console.info(
-        `[better-auth] Reset password solicitado para ${user.email}. Link: ${url}`
-      )
+      try {
+        await emailService.sendResetPasswordEmail({
+          to: user.email,
+          resetUrl: url,
+          userName: user.name || undefined,
+        })
+
+        console.info(
+          `[better-auth] Email de recuperação enviado para ${user.email}`
+        )
+      } catch (error) {
+        console.error(
+          `[better-auth] Erro ao enviar email de recuperação para ${user.email}:`,
+          error
+        )
+        // Não lança o erro para não quebrar o fluxo, apenas loga
+        // O better-auth continuará o processo mesmo se o email falhar
+      }
     },
     onPasswordReset: async ({ user }) => {
       console.info(`[better-auth] Senha redefinida para ${user.email}`)
