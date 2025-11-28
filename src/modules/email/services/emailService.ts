@@ -1,6 +1,11 @@
 import { transporter } from '../config/nodemailer'
 import { getResetPasswordEmailTemplate } from '../templates/resetPasswordTemplate'
-import type { SendEmailParams, SendResetPasswordEmailParams } from '../types'
+import { getVerificationEmailTemplate } from '../templates/verificationEmailTemplate'
+import type {
+  SendEmailParams,
+  SendResetPasswordEmailParams,
+  SendVerificationEmailParams,
+} from '../types'
 
 /**
  * Serviço de envio de emails usando Nodemailer
@@ -79,6 +84,24 @@ class EmailService {
     return this.sendEmail({
       to: { email: to, name: userName },
       subject: 'Recuperação de Senha',
+      html,
+    })
+  }
+
+  /**
+   * Envia email de verificação de email
+   *
+   * @param params - Parâmetros do email de verificação
+   * @returns Resultado do envio
+   */
+  async sendVerificationEmail(params: SendVerificationEmailParams) {
+    const { to, verificationUrl, userName } = params
+
+    const html = getVerificationEmailTemplate(verificationUrl, userName)
+
+    return this.sendEmail({
+      to: { email: to, name: userName },
+      subject: 'Verifique seu Email',
       html,
     })
   }

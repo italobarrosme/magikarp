@@ -7,6 +7,8 @@ export async function middleware(request: NextRequest) {
     "/api/auth/",
     "/recovery-password",
     "/reset-password",
+    "/verify-email",
+    "/verify",
   ];
 
   // Exclui rotas de API de autenticação e páginas públicas

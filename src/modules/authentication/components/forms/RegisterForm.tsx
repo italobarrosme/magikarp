@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 type RegisterFormProps = {
-  onSuccess?: () => void | Promise<void>
+  onSuccess?: (email?: string) => void | Promise<void>
   onError?: (error: string) => void
 }
 

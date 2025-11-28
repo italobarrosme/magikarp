@@ -15,3 +15,9 @@ export type SendResetPasswordEmailParams = {
   resetUrl: string
   userName?: string
 }
+
+export type SendVerificationEmailParams = {
+  to: string
+  verificationUrl: string
+  userName?: string
+}

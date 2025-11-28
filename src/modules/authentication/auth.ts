@@ -38,6 +38,28 @@ export const auth = betterAuth({
       console.info(`[better-auth] Senha redefinida para ${user.email}`)
     },
   },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      try {
+        await emailService.sendVerificationEmail({
+          to: user.email,
+          verificationUrl: url,
+          userName: user.name || undefined,
+        })
+
+        console.info(
+          `[better-auth] Email de verificação enviado para ${user.email}`
+        )
+      } catch (error) {
+        console.error(
+          `[better-auth] Erro ao enviar email de verificação para ${user.email}:`,
+          error
+        )
+        // Não lança o erro para não quebrar o fluxo, apenas loga
+        // O better-auth continuará o processo mesmo se o email falhar
+      }
+    },
+  },
 })
 
 export default auth

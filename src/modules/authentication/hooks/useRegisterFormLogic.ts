@@ -6,7 +6,7 @@ import type { RegisterFormInput } from '../components/forms/schemas'
 import { translateAuthError } from '../utils/translateAuthError'
 
 type UseRegisterFormLogicParams = {
-  onSuccess?: () => void | Promise<void>
+  onSuccess?: (email?: string) => void | Promise<void>
   onError?: (message: string) => void
 }
 
@@ -29,10 +29,15 @@ export function useRegisterFormLogic(
       setIsLoading(true)
 
       try {
+        const baseURL =
+          process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3002'
+        const callbackURL = `${baseURL}/verify`
+
         const result = await authClient.signUp.email({
           email: data.email,
           password: data.password,
           name: data.name,
+          callbackURL,
         })
 
         if (result.error) {
@@ -45,7 +50,8 @@ export function useRegisterFormLogic(
           return
         }
 
-        await onSuccess?.()
+        // Passa o email para o callback de sucesso
+        await onSuccess?.(data.email)
       } catch (err) {
         const errorMessage = translateAuthError(
           err,
