@@ -14,6 +14,10 @@ export type RegisterFormData = {
   confirmPassword: string
 }
 
+export type RecoveryPasswordFormData = {
+  email: string
+}
+
 export type AuthError = {
   message: string
   field?: string

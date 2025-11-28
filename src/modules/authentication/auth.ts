@@ -13,6 +13,14 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ user, url }) => {
+      console.info(
+        `[better-auth] Reset password solicitado para ${user.email}. Link: ${url}`
+      )
+    },
+    onPasswordReset: async ({ user }) => {
+      console.info(`[better-auth] Senha redefinida para ${user.email}`)
+    },
   },
 })
 
