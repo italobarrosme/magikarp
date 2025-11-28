@@ -20,8 +20,12 @@ pre-commit:
   parallel: true
   commands:
     biome-check:
-      glob: "*.{js,ts,jsx,tsx,css,scss,json,jsonc}"
+      glob: "src/**/*.{js,ts,jsx,tsx,css,scss,json,jsonc}"
       run: npx @biomejs/biome check --write {staged_files}
+      stage_fixed: true
+      skip: empty
+
     tests:
-      glob: "*.{js,ts,jsx,tsx}"
+      glob: "src/**/*.{js,ts,jsx,tsx}"
       run: npm run test:deploy --findRelatedTests --bail
+      skip: empty
