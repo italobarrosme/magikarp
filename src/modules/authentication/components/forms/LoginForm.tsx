@@ -1,14 +1,12 @@
 'use client'
 
-import { authClient } from '@/modules/authentication/auth-client'
 import {
   type LoginFormInput,
   loginSchema,
-} from '@/modules/authentication/components/form/schemas'
-import { translateAuthError } from '@/modules/authentication/utils/translateAuthError'
+} from '@/modules/authentication/components/forms/schemas'
+import { useLoginFormLogic } from '@/modules/authentication/hooks/useLoginFormLogic'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { RecoveryPasswordLink } from '../RecoveryPasswordLink'
 
@@ -19,8 +17,6 @@ type LoginFormProps = {
 
 export function LoginForm({ onSuccess, onError }: LoginFormProps) {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [serverError, setServerError] = useState<string | null>(null)
 
   const {
     register,
@@ -34,43 +30,17 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
     },
   })
 
-  const onSubmit = async (data: LoginFormInput) => {
-    setServerError(null)
-    setIsLoading(true)
-
-    try {
-      const result = await authClient.signIn.email({
-        email: data.email,
-        password: data.password,
-      })
-
-      if (result.error) {
-        const errorMessage = translateAuthError(
-          result.error,
-          'Erro ao fazer login'
-        )
-        setServerError(errorMessage)
-        onError?.(errorMessage)
-        return
-      }
-
-      onSuccess?.()
+  const { handleLogin, isLoading, serverError } = useLoginFormLogic({
+    onError,
+    onSuccess: async () => {
+      await onSuccess?.()
       router.push('/')
-    } catch (err) {
-      const errorMessage = translateAuthError(
-        err,
-        'Erro desconhecido ao fazer login'
-      )
-      setServerError(errorMessage)
-      onError?.(errorMessage)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+    },
+  })
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleLogin)}
       className="w-full max-w-md flex flex-col gap-4 mx-auto justify-center"
     >
       <div>
@@ -110,11 +80,11 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
           placeholder="••••••••"
           disabled={isLoading}
         />
-        {errors.password && (
-          <RecoveryPasswordLink href="/recovery-password">
+        <RecoveryPasswordLink href="/recovery-password">
+          <p className="text-sm text-primary-regular underline text-right mt-1">
             Esqueceu sua senha?
-          </RecoveryPasswordLink>
-        )}
+          </p>
+        </RecoveryPasswordLink>
         {errors.password && (
           <p className="mt-1 text-sm text-red-600 dark:text-red-400">
             {errors.password.message}
