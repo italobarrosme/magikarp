@@ -1,13 +1,11 @@
 'use client'
 
-import { authClient } from '@/modules/authentication/auth-client'
 import {
   type RegisterFormInput,
   registerSchema,
-} from '@/modules/authentication/components/form/schemas'
-import { translateAuthError } from '@/modules/authentication/utils/translateAuthError'
+} from '@/modules/authentication/components/forms/schemas'
+import { useRegisterFormLogic } from '@/modules/authentication/hooks/useRegisterFormLogic'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 type RegisterFormProps = {
@@ -16,9 +14,6 @@ type RegisterFormProps = {
 }
 
 export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const [serverError, setServerError] = useState<string | null>(null)
-
   const {
     register,
     handleSubmit,
@@ -33,43 +28,14 @@ export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
     },
   })
 
-  const onSubmit = async (data: RegisterFormInput) => {
-    setServerError(null)
-    setIsLoading(true)
-
-    try {
-      const result = await authClient.signUp.email({
-        email: data.email,
-        password: data.password,
-        name: data.name,
-      })
-
-      if (result.error) {
-        const errorMessage = translateAuthError(
-          result.error,
-          'Erro ao registrar usuário'
-        )
-        setServerError(errorMessage)
-        onError?.(errorMessage)
-        return
-      }
-
-      await onSuccess?.()
-    } catch (err) {
-      const errorMessage = translateAuthError(
-        err,
-        'Erro desconhecido ao registrar usuário'
-      )
-      setServerError(errorMessage)
-      onError?.(errorMessage)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const { handleRegister, isLoading, serverError } = useRegisterFormLogic({
+    onError,
+    onSuccess,
+  })
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleRegister)}
       className="w-full max-w-md flex flex-col gap-4 mx-auto justify-center"
     >
       <div>

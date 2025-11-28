@@ -1,4 +1,4 @@
-import { RegisterForm } from '@/modules/authentication/components/form'
+import { RegisterForm } from '@/modules/authentication/components/forms'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
