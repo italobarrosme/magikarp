@@ -53,9 +53,33 @@ export const resetPasswordSchema = z
   })
 
 /**
+ * Schema de validação para o formulário de alteração de senha
+ */
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Senha atual é obrigatória'),
+    newPassword: z
+      .string()
+      .min(1, 'Nova senha é obrigatória')
+      .min(8, 'Nova senha deve ter pelo menos 8 caracteres'),
+    confirmNewPassword: z
+      .string()
+      .min(1, 'Confirmação de nova senha é obrigatória'),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: 'As novas senhas não coincidem',
+    path: ['confirmNewPassword'],
+  })
+  .refine((data) => data.currentPassword !== data.newPassword, {
+    message: 'A nova senha deve ser diferente da senha atual',
+    path: ['newPassword'],
+  })
+
+/**
  * Tipos inferidos dos schemas
  */
 export type LoginFormInput = z.infer<typeof loginSchema>
 export type RegisterFormInput = z.infer<typeof registerSchema>
 export type RecoveryPasswordFormInput = z.infer<typeof recoveryPasswordSchema>
 export type ResetPasswordFormInput = z.infer<typeof resetPasswordSchema>
+export type ChangePasswordFormInput = z.infer<typeof changePasswordSchema>
