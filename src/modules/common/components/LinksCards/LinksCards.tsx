@@ -5,7 +5,7 @@ type LinkCard = {
   label: string
   href?: string
   icon: React.ReactNode
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 type LinksCardsProps = {
