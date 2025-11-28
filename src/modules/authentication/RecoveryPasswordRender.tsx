@@ -1,3 +1,4 @@
+import { SubText } from '../common/components'
 import { RecoveryPasswordForm } from './components/forms/RecoveryPasswordForm'
 
 export default function RecoveryPasswordRender() {
@@ -5,10 +6,10 @@ export default function RecoveryPasswordRender() {
     <section className="w-full h-full flex flex-col gap-6 justify-center">
       <header className="space-y-2 text-left md:text-center md:max-w-md md:mx-auto">
         <h1 className="text-2xl font-bold">Recuperar acesso à sua conta</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <SubText>
           Informe o email cadastrado e enviaremos um link para redefinir sua
           senha.
-        </p>
+        </SubText>
       </header>
 
       <RecoveryPasswordForm />

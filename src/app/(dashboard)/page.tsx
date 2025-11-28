@@ -1,3 +1,4 @@
+import { SubText } from '@/modules/common/components'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -10,9 +11,7 @@ export default async function HomePage() {
     <section className="w-full h-full flex flex-col gap-4">
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-sm text-gray-500">
-          Bem-vindo ao dashboard do sistema.
-        </p>
+        <SubText>Bem-vindo ao dashboard do sistema.</SubText>
       </div>
     </section>
   )

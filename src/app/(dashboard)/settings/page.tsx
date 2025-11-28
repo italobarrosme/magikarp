@@ -1,4 +1,4 @@
-import { SettingsIcon } from '@/modules/common/components'
+import { SettingsIcon, SubText } from '@/modules/common/components'
 import { LinksCards } from '@/modules/common/components/LinksCards'
 import { Metadata } from 'next'
 
@@ -13,10 +13,10 @@ const linksCards = [
     icon: <SettingsIcon />,
     href: '/settings/change-password',
     children: (
-      <p className="text-xs text-zinc-500 dark:text-zinc-400">
+      <SubText>
         Fortaleça sua segurança atualizando sua senha. Clique no botão abaixo
         para definir uma nova senha mais segura.
-      </p>
+      </SubText>
     ),
   },
 ]
