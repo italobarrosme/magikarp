@@ -1,5 +1,11 @@
 import { LoginForm } from '@/modules/authentication/components/forms'
+import { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Acesse o sistema',
+  description: 'Acesse o sistema de monitoramento e treinamento de ataques',
+}
 
 export default function LoginPage() {
   return (
