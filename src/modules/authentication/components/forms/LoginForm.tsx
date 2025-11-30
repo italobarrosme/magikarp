@@ -49,7 +49,7 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
           htmlFor="email"
           className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
         >
-          Email
+          Email de acesso
         </label>
         <input
           id="email"

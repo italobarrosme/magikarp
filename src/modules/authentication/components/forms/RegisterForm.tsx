@@ -77,14 +77,14 @@ export function RegisterForm({ onError }: RegisterFormProps) {
           htmlFor="name"
           className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
         >
-          Nome
+          Nome da empresa
         </label>
         <input
           id="name"
           type="text"
           {...register('name')}
           className="w-full px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Seu nome completo"
+          placeholder="Nome da empresa"
           disabled={isLoading}
         />
         {errors.name && (
@@ -99,7 +99,7 @@ export function RegisterForm({ onError }: RegisterFormProps) {
           htmlFor="email"
           className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
         >
-          Email
+          Email de acesso
         </label>
         <input
           id="email"

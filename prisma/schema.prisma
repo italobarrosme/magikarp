@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,73 +6,135 @@ datasource db {
   provider = "postgresql"
 }
 
+// User - Empresa cliente do SAAS (modelo User para Better Auth, tabela company no banco)
 model User {
-  id               String          @id @default(uuid())
-  name             String
-  phone            String?         @unique
-  role             String          @default("employee")
-  messages         SentMessage[]
-  createdCampaigns Campaign[]      @relation("CampaignCreator")
-  email            String
-  emailVerified    Boolean         @default(false)
-  image            String?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  sessions         Session[]
-  accounts         Account[]
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  phone         String?  @unique
+  document      String? // CNPJ
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  @@unique([email])
-  @@map("user")
+  // Relacionamentos de autenticação
+  sessions Session[]
+  accounts Account[]
+
+  // Relacionamentos de negócio
+  employees        Employee[]
+  campaigns        Campaign[]
+  createdCampaigns Campaign[] @relation("CampaignCreator")
+
+  @@map("company")
 }
 
+// Employee - Funcionários que serão vítimas das campanhas
+model Employee {
+  id        String   @id @default(uuid())
+  name      String
+  email     String?
+  phone     String // WhatsApp para envio
+  category  String // vendas | financeiro | rh | ti | operacional | etc
+  companyId String
+  company   User     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  campaignTargets CampaignTarget[]
+
+  @@index([companyId])
+  @@index([category])
+  @@map("employee")
+}
+
+// PhishingTemplate - Templates pré-prontos de golpes
+model PhishingTemplate {
+  id                      String   @id @default(uuid())
+  name                    String
+  description             String?
+  type                    String // phishing | malware | social_engineering | smishing
+  defaultMessage          String // Mensagem padrão do template
+  defaultAwarenessContent String // Conteúdo educacional padrão
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  campaigns Campaign[]
+
+  @@map("phishing_template")
+}
+
+// Campaign - Campanha de simulação
 model Campaign {
-  id                    String            @id @default(uuid())
-  title                 String
-  fakeLink              String            // Link fictício que parece ser de pagamento
-  createdById           String            // User que criou a campanha
-  createdBy             User              @relation("CampaignCreator", fields: [createdById], references: [id])
-  targetVictimId        String?           // Vítima alvo (opcional, null = múltiplos vítimas)
-  targetVictim          Victim?           @relation(fields: [targetVictimId], references: [id])
-  awarenessPageContent  String?           // Conteúdo da página de conscientização (HTML/Markdown)
-  awarenessPageType     String            @default("html") // html | pdf | markdown
-  createdAt             DateTime          @default(now())
-  updatedAt             DateTime          @updatedAt
-  messages              PhishingMessage[]
-  sentMessages          SentMessage[]
-  phishingEvents       PhishingEvent[]
+  id                   String            @id @default(uuid())
+  title                String
+  description          String?
+  fakeLink             String // Link fictício que parece ser malicioso
+  fakeMessage          String // Mensagem customizada (baseada no template)
+  awarenessPageContent String? // Conteúdo da página educativa (pode sobrescrever o template)
+  status               String            @default("draft") // draft | active | completed | cancelled
+  companyId            String
+  company              User              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdById          String // Company que criou a campanha
+  createdBy            User              @relation("CampaignCreator", fields: [createdById], references: [id])
+  templateId           String?
+  template             PhishingTemplate? @relation(fields: [templateId], references: [id])
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  startedAt            DateTime? // Quando a campanha foi ativada
+  completedAt          DateTime? // Quando a campanha foi finalizada
+
+  targets CampaignTarget[]
+
+  @@index([companyId])
+  @@index([createdById])
+  @@index([status])
+  @@map("campaign")
 }
 
-model PhishingMessage {
-  id         String   @id @default(uuid())
-  content    String
+// CampaignTarget - Relaciona Campaign com Employee (múltiplos targets)
+model CampaignTarget {
+  id         String    @id @default(uuid())
   campaignId String
-  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  campaign   Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  employeeId String
+  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  status     String    @default("pending") // pending | sent | clicked | reported | failed
+  sentAt     DateTime? // Quando a mensagem foi enviada
+  clickedAt  DateTime? // Quando o link foi clicado
+  whatsappId String? // ID da mensagem no WhatsApp
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  events PhishingEvent[]
+
+  @@unique([campaignId, employeeId]) // Um employee só pode ser target uma vez por campanha
+  @@index([campaignId])
+  @@index([employeeId])
+  @@index([status])
+  @@map("campaign_target")
 }
 
-model SentMessage {
-  id         String   @id @default(uuid())
-  campaignId String
-  userId     String
-  whatsappId String?
-  sentAt     DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
-  campaign   Campaign @relation(fields: [campaignId], references: [id])
-}
-
+// PhishingEvent - Eventos de interação (cliques, reports, etc)
 model PhishingEvent {
-  id         String   @id @default(uuid())
-  type       String   // click | report
-  createdAt  DateTime @default(now())
-  victimId   String   // Vítima que clicou
-  campaignId String
-  userAgent  String?  // Equipamento/navegador usado
-  ipAddress  String?  // IP do usuário
-  deviceInfo Json?    // Informações adicionais do dispositivo (parseado do userAgent)
-  metadata   Json?    // Metadados adicionais
-  victim     Victim   @relation(fields: [victimId], references: [id])
-  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  id               String         @id @default(uuid())
+  type             String // click | report | view
+  campaignTargetId String
+  campaignTarget   CampaignTarget @relation(fields: [campaignTargetId], references: [id], onDelete: Cascade)
+  userAgent        String? // Navegador/dispositivo
+  ipAddress        String? // IP do usuário
+  deviceInfo       Json? // Informações parseadas do dispositivo
+  metadata         Json? // Metadados adicionais
+  createdAt        DateTime       @default(now())
+
+  @@index([campaignTargetId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("phishing_event")
 }
 
+// Session - Sessões de autenticação (relacionadas com Company)
 model Session {
   id        String   @id
   expiresAt DateTime
@@ -82,7 +143,7 @@ model Session {
   updatedAt DateTime @updatedAt
   ipAddress String?
   userAgent String?
-  userId    String
+  userId    String   @map("companyId")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
@@ -90,11 +151,12 @@ model Session {
   @@map("session")
 }
 
+// Account - Contas de autenticação (relacionadas com Company)
 model Account {
   id                    String    @id
   accountId             String
   providerId            String
-  userId                String
+  userId                String    @map("companyId")
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
@@ -110,19 +172,7 @@ model Account {
   @@map("account")
 }
 
-model Victim {
-  id            String          @id @default(uuid())
-  name          String
-  email         String?
-  phone         String
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  campaigns     Campaign[]
-  events        PhishingEvent[]
-
-  @@map("victim")
-}
-
+// Verification - Tokens de verificação (email, etc)
 model Verification {
   id         String   @id
   identifier String
