@@ -1,7 +1,7 @@
 {
-  "name": "phishing-system",
+  "name": "attack-training-system",
   "version": "1.0.0",
-  "description": "Sistema para monitoramento e treinamento de ataque phishing",
+  "description": "Sistema para monitoramento e treinamento de ataques",
   "private": true,
   "type": "module",
   "scripts": {
