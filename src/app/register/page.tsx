@@ -2,22 +2,11 @@
 
 import { RegisterForm } from '@/modules/authentication/components/forms'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
-  const router = useRouter()
-
-  const handleRegisterSuccess = (email?: string) => {
-    // Redireciona para a página de verificação de email
-    const verifyUrl = email
-      ? `/verify-email?email=${encodeURIComponent(email)}`
-      : '/verify-email'
-    router.push(verifyUrl)
-  }
-
   return (
     <>
-      <RegisterForm onSuccess={handleRegisterSuccess} />
+      <RegisterForm />
       <div className="flex flex-col gap-2">
         <span className="text-sm text-left md:text-center">
           Já tem uma conta?{' '}

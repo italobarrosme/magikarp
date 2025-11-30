@@ -1,4 +1,5 @@
 import { transporter } from '../config/nodemailer'
+import { validateSmtpEnv } from '../config/smtpEnvSchema'
 import { getResetPasswordEmailTemplate } from '../templates/resetPasswordTemplate'
 import { getVerificationEmailTemplate } from '../templates/verificationEmailTemplate'
 import type {
@@ -36,7 +37,23 @@ class EmailService {
    */
   async sendEmail(params: SendEmailParams) {
     try {
+      // Validação de configuração SMTP usando Zod
+      try {
+        validateSmtpEnv()
+      } catch (error) {
+        if (error instanceof Error) {
+          const errorMessage = `[EmailService] ❌ Configuração SMTP inválida: ${error.message}`
+          console.error(errorMessage)
+          throw new Error(errorMessage)
+        }
+        throw error
+      }
+
       const { to, subject, html, from = this.defaultFrom } = params
+
+      console.debug('[EmailService] Enviando email para:', to)
+      console.debug(`[EmailService] Assunto: ${subject}`)
+      console.debug(`[EmailService] Remetente: ${from}`)
 
       // Converte para array se necessário
       const recipients = Array.isArray(to) ? to : [to]
@@ -60,12 +77,28 @@ class EmailService {
         html,
       })
 
+      console.info(
+        `[EmailService] ✅ Email enviado com sucesso. Message ID: ${info.messageId}`
+      )
+      console.debug('[EmailService] Resposta do servidor SMTP:', {
+        messageId: info.messageId,
+        response: info.response,
+        accepted: info.accepted,
+        rejected: info.rejected,
+      })
+
       return {
         success: true,
         id: info.messageId,
       }
     } catch (error) {
-      console.error('[EmailService] Erro ao enviar email:', error)
+      console.error('[EmailService] ❌ Erro ao enviar email:', error)
+      if (error instanceof Error) {
+        console.error(`[EmailService] Mensagem: ${error.message}`)
+        if (error.stack) {
+          console.error(`[EmailService] Stack: ${error.stack}`)
+        }
+      }
       throw error
     }
   }

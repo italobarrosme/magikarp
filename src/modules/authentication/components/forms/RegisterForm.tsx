@@ -5,7 +5,9 @@ import {
   registerSchema,
 } from '@/modules/authentication/components/forms/schemas'
 import { useRegisterFormLogic } from '@/modules/authentication/hooks/useRegisterFormLogic'
+import { useSendVerificationEmail } from '@/modules/authentication/hooks/useSendVerificationEmail'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { PasswordInput } from '../PasswordInput'
 
@@ -14,7 +16,38 @@ type RegisterFormProps = {
   onError?: (error: string) => void
 }
 
-export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
+export function RegisterForm({ onError }: RegisterFormProps) {
+  const router = useRouter()
+
+  const { sendVerificationEmail } = useSendVerificationEmail({
+    onError: (error) => {
+      console.error(
+        '[RegisterForm] Erro ao enviar email de verificação:',
+        error
+      )
+      onError?.(error)
+    },
+  })
+
+  const handleSuccess = async (email?: string) => {
+    if (!email) {
+      router.push('/verify-email')
+      return
+    }
+
+    // O better-auth já deve ter enviado o email automaticamente após o registro,
+    // mas enviamos novamente como fallback caso não tenha sido enviado
+    try {
+      await sendVerificationEmail(email, '/verify')
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`)
+    } catch (error) {
+      // Se falhar, ainda redireciona para a página de verificação
+      // O usuário pode solicitar um novo email lá
+      console.error('[RegisterForm] Erro ao enviar email:', error)
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`)
+    }
+  }
+
   const {
     register,
     handleSubmit,
@@ -31,7 +64,7 @@ export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
 
   const { handleRegister, isLoading, serverError } = useRegisterFormLogic({
     onError,
-    onSuccess,
+    onSuccess: handleSuccess,
   })
 
   return (

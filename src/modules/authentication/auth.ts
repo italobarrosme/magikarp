@@ -41,20 +41,37 @@ export const auth = betterAuth({
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
       try {
-        await emailService.sendVerificationEmail({
+        console.info(
+          `[better-auth] Tentando enviar email de verificação para ${user.email}`
+        )
+        console.debug(`[better-auth] URL de verificação: ${url}`)
+
+        const response = await emailService.sendVerificationEmail({
           to: user.email,
           verificationUrl: url,
           userName: user.name || undefined,
         })
 
-        console.info(
-          `[better-auth] Email de verificação enviado para ${user.email}`
-        )
+        if (response?.success) {
+          console.info(
+            `[better-auth] ✅ Email de verificação enviado com sucesso para ${user.email}`
+          )
+          console.debug(`[better-auth] Message ID: ${response.id}`)
+        } else {
+          console.error(
+            `[better-auth] ❌ Falha ao enviar email de verificação para ${user.email}. Resposta:`,
+            response
+          )
+        }
       } catch (error) {
         console.error(
-          `[better-auth] Erro ao enviar email de verificação para ${user.email}:`,
+          `[better-auth] ❌ Erro ao enviar email de verificação para ${user.email}:`,
           error
         )
+        if (error instanceof Error) {
+          console.error(`[better-auth] Mensagem de erro: ${error.message}`)
+          console.error(`[better-auth] Stack: ${error.stack}`)
+        }
         // Não lança o erro para não quebrar o fluxo, apenas loga
         // O better-auth continuará o processo mesmo se o email falhar
       }
