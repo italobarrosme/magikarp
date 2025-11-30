@@ -8,6 +8,7 @@ import { useLoginFormLogic } from '@/modules/authentication/hooks/useLoginFormLo
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import { PasswordInput } from '../PasswordInput'
 import { RecoveryPasswordLink } from '../RecoveryPasswordLink'
 
 type LoginFormProps = {
@@ -54,7 +55,7 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
           id="email"
           type="email"
           {...register('email')}
-          className="w-full px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 rounded-lg placeholder:text-zinc-500/30 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="seu@email.com"
           disabled={isLoading}
         />
@@ -66,19 +67,11 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
-        >
-          Senha
-        </label>
-        <input
-          id="password"
-          type="password"
+        <PasswordInput
+          label="Senha"
+          error={errors.password?.message}
+          placeholder="sua senha"
           {...register('password')}
-          className="w-full px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="••••••••"
-          disabled={isLoading}
         />
         <RecoveryPasswordLink href="/recovery-password">
           <p className="text-sm text-primary-regular underline text-right mt-1">

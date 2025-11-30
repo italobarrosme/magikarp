@@ -7,6 +7,15 @@ button:hover {
   cursor: pointer;
 }
 
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"] {
+  -webkit-text-security: disc;
+}
+
 @theme {
   /* Expondo as variáveis como tokens nativos do Tailwind 4 */
   --color-primary: var(--color-primary);

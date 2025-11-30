@@ -7,6 +7,7 @@ import {
 import { useRegisterFormLogic } from '@/modules/authentication/hooks/useRegisterFormLogic'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { PasswordInput } from '../PasswordInput'
 
 type RegisterFormProps = {
   onSuccess?: (email?: string) => void | Promise<void>
@@ -83,25 +84,11 @@ export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
-        >
-          Senha
-        </label>
-        <input
-          id="password"
-          type="password"
+        <PasswordInput
+          label="Senha"
+          error={errors.password?.message}
           {...register('password')}
-          className="w-full px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Mínimo 8 caracteres"
-          disabled={isLoading}
         />
-        {errors.password && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-            {errors.password.message}
-          </p>
-        )}
       </div>
 
       <div>
