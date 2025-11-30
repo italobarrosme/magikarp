@@ -87,30 +87,18 @@ export function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
         <PasswordInput
           label="Senha"
           error={errors.password?.message}
+          placeholder="Digite sua senha"
           {...register('password')}
         />
       </div>
 
       <div>
-        <label
-          htmlFor="confirmPassword"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
-        >
-          Confirmar Senha
-        </label>
-        <input
-          id="confirmPassword"
-          type="password"
+        <PasswordInput
+          label="Confirmar Senha"
+          error={errors.confirmPassword?.message}
+          placeholder="Confirme sua senha"
           {...register('confirmPassword')}
-          className="w-full px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Digite a senha novamente"
-          disabled={isLoading}
         />
-        {errors.confirmPassword && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-            {errors.confirmPassword.message}
-          </p>
-        )}
       </div>
 
       {serverError && (

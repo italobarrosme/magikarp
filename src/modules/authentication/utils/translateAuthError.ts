@@ -98,12 +98,12 @@ const errorCatalog: Record<
     portuguese: 'Senha muito longa.',
   },
   USER_ALREADY_EXISTS: {
-    english: 'User already exists.',
-    portuguese: 'Usuário já existe.',
+    english: 'This email is already in use.',
+    portuguese: 'Este email já está em uso.',
   },
   USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL: {
-    english: 'User already exists. Use another email.',
-    portuguese: 'Usuário já existe. Use outro email.',
+    english: 'This email is already in use. Use another email.',
+    portuguese: 'Este email já está em uso. Use outro email.',
   },
   EMAIL_CAN_NOT_BE_UPDATED: {
     english: 'Email can not be updated',

@@ -1,3 +1,4 @@
+import { isStrongPassword } from '@/modules/authentication/utils'
 import { z } from 'zod'
 
 /**
@@ -24,16 +25,29 @@ export const registerSchema = z
       .string()
       .min(1, 'Nome é obrigatório')
       .min(2, 'Nome deve ter pelo menos 2 caracteres'),
+
     email: z.string().min(1, 'Email é obrigatório').email('Email inválido'),
+
     password: z
       .string()
       .min(1, 'Senha é obrigatória')
-      .min(8, 'Senha deve ter pelo menos 8 caracteres'),
+      .superRefine((password, ctx) => {
+        const validation = isStrongPassword(password)
+        if (!validation.isTotalValid && validation.tips) {
+          validation.tips.forEach((tip) => {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: tip,
+            })
+          })
+        }
+      }),
+
     confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
   })
   .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'], // aponta o erro pro campo certo
     message: 'As senhas não coincidem',
-    path: ['confirmPassword'],
   })
 
 /**
@@ -44,7 +58,17 @@ export const resetPasswordSchema = z
     password: z
       .string()
       .min(1, 'Senha é obrigatória')
-      .min(8, 'Senha deve ter pelo menos 8 caracteres'),
+      .superRefine((password, ctx) => {
+        const validation = isStrongPassword(password)
+        if (!validation.isTotalValid && validation.tips) {
+          validation.tips.forEach((tip) => {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: tip,
+            })
+          })
+        }
+      }),
     confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -61,7 +85,17 @@ export const changePasswordSchema = z
     newPassword: z
       .string()
       .min(1, 'Nova senha é obrigatória')
-      .min(8, 'Nova senha deve ter pelo menos 8 caracteres'),
+      .superRefine((password, ctx) => {
+        const validation = isStrongPassword(password)
+        if (!validation.isTotalValid && validation.tips) {
+          validation.tips.forEach((tip) => {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: tip,
+            })
+          })
+        }
+      }),
     confirmNewPassword: z
       .string()
       .min(1, 'Confirmação de nova senha é obrigatória'),
